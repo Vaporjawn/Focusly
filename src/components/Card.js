@@ -40,6 +40,7 @@ const soundStatus = {
 };
 
 const Card = (props, initialState = 0) => {
+  const { shuffleButtonClicked } = props;
   const { timer, setTimer } = useContext(MyContext);
   const [isActive, setIsActive] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -78,6 +79,17 @@ const Card = (props, initialState = 0) => {
     !isActive && !isPaused ? handleStart() : handlePause();
     props.setCurrentAudio(props.sound);                    //set the current song to the song being clicked
   };
+
+  // Shuffle logic: play a random card when shuffleButtonClicked changes
+  useEffect(() => {
+    if (shuffleButtonClicked) {
+      // 1 in 3 chance to play this card
+      if (Math.floor(Math.random() * 3) === 0) {
+        if (!playing) handlePlay();
+      }
+    }
+    // eslint-disable-next-line
+  }, [shuffleButtonClicked]);
 
   const handlePauseCard = () => {
     setSoundStatus({ ...soundStatus, playing: true, paused: !paused });
